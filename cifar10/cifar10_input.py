@@ -59,11 +59,14 @@ def read_cifar10(filename_queue):
 
   class CIFAR10Record(object):
     pass
+
+  # ???
   result = CIFAR10Record()
 
   # Dimensions of the images in the CIFAR-10 dataset.
   # See http://www.cs.toronto.edu/~kriz/cifar.html for a description of the
   # input format.
+  # 入力画像のサイズ
   label_bytes = 1  # 2 for CIFAR-100
   result.height = 32
   result.width = 32
