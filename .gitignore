@@ -1,1 +1,6 @@
 *.jpeg
+*.png
+*.jpg
+*.pyc
+*.csv
+.DS_STORE
