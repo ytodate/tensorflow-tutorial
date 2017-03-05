@@ -8,6 +8,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation
 
 TRAIN = "train.csv"
+TEST = "test.csv"
 #pil_img = load_img('data/train/cat_00000.png')
 #np_img = img_to_array(pil_img)
 #np_img = np_img.reshape((1,) + np_img.shape)
@@ -15,17 +16,16 @@ TRAIN = "train.csv"
 def read_image():
     return image
 
-def load_data():
-    num_data = sum(1 for line in open(TRAIN))
-    f = open(TRAIN, 'r')
+def read_csv(filename):
+    num_data = sum(1 for line in open(filename))
+    f = open(filename, 'r')
     reader = csv.reader(f)
     images = []
     labels = []
 
     #x_train = np.zeros((num_data, 3, 32, 32), dtype='uint8')
-    x_train = np.zeros((num_data, 32, 32, 3), dtype='uint8')
-    y_train = np.zeros((num_data,), dtype='uint8')
-
+    x = np.zeros((num_data, 32, 32, 3), dtype='uint8')
+    y = np.zeros((num_data,), dtype='uint8')
 
     index = 0
     for image_path, label in reader:
@@ -34,25 +34,23 @@ def load_data():
         np_img = img_to_array(pil_img)
 
         # reshape color height width
-        #np_img = np_img.reshape((1,) + (np_img.shape[2], np_img.shape[1], np_img.shape[0]))
         np_img = np_img.reshape((1,) + np_img.shape)
-        x_train[index, :, :, :] = np_img
-        y_train[index] = label
+
+        x[index, :, :, :] = np_img
+        y[index] = label
+
         index += 1
 
-    print(type(x_train))
+    f.close()
 
-    return x_train, y_train
+    return (x, y)
 
-def build(source=None):
-    datagen = ImageDataGenerator(rescale=1. / 255)
-    data_generator = datagen.flow_from_directory(
-                source,  # this is the target directory
-                target_size=(150, 150),  # all images will be resized to 150x150
-                batch_size=11,
-                class_mode='sparse')
-    class_dictionary = data_generator.class_indices
-    return data_generator, class_dictionary
+
+def load_data():
+    train_datasets = read_csv(TRAIN)
+    test_datasets = read_csv(TEST)
+
+    return train_datasets, test_datasets
 
 if __name__ == '__main__':
     load_data()
